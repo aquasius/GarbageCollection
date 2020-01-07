@@ -18,8 +18,10 @@ namespace GarbCollector.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
+        ApplicationDbContext context;
         public AccountController()
         {
+            context = new ApplicationDbContext();
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
@@ -52,6 +54,14 @@ namespace GarbCollector.Controllers
             }
         }
 
+        // GET: /Account/Register    
+        [AllowAnonymous]
+        public ActionResult Register()
+        {
+            ViewBag.Name = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
+                                            .ToList(), "Name", "Name");
+            return View();
+        }
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -61,7 +71,33 @@ namespace GarbCollector.Controllers
             return View();
         }
 
-        //
+        // POST: /Account/Register    
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                        await this.UserManager.AddToRoleAsync(user.Id, model.UserRoles);
+                    //Ends Here     
+                    return RedirectToAction("Index", "Users");
+                }
+                ViewBag.Name = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
+                                          .ToList(), "Name", "Name");
+                AddErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form    
+            return View(model);
+        }
+    
+         //
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
