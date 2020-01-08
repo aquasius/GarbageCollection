@@ -33,10 +33,10 @@ namespace GarbCollector
                 roleManager.Create(role);
 
                 var user = new ApplicationUser();
-                user.UserName = "";
-                user.Email = "";
+                user.UserName = "HuaTheDragon";
+                user.Email = "IAmTheDragon@gmail.com";
 
-                string userPWD = "";
+                string userPWD = "HuaTheDogN0se!";
 
                 var chkUser = UserManager.Create(user, userPWD);
 

@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using GarbCollector.Models;
+using Microsoft.AspNet.Identity;
 
 namespace GarbCollector.Controllers
 {
@@ -17,8 +18,11 @@ namespace GarbCollector.Controllers
         // GET: Customers
         public ActionResult Index()
         {
-            var customers = db.Customers.Include(c => c.ApplicationUser);
-            return View(customers.ToList());
+            //var customers = db.Customers.Include(c => c.ApplicationUser);
+            //return View(customers.ToList());
+            var Id = User.Identity.GetUserId();
+            var person = db.Customers.Where(c => c.ApplicationId == Id).Select(c => c).SingleOrDefault();
+            return View("Balance", person);
         }
 
         // GET: Customers/Details/5
@@ -52,6 +56,8 @@ namespace GarbCollector.Controllers
         {
             if (ModelState.IsValid)
             {
+                customer.balance = 25;
+                customer.ApplicationId = User.Identity.GetUserId();
                 db.Customers.Add(customer);
                 db.SaveChanges();
                 return RedirectToAction("Index");

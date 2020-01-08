@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using GarbCollector.Models;
+using Microsoft.AspNet.Identity;
 
 namespace GarbCollector.Controllers
 {
@@ -52,6 +53,7 @@ namespace GarbCollector.Controllers
         {
             if (ModelState.IsValid)
             {
+                employee.ApplicationId = User.Identity.GetUserId();
                 db.Employees.Add(employee);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -127,6 +129,21 @@ namespace GarbCollector.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+    
+        public void FindZipCodes(int zip)
+        {
+            var customer = db.Customers.Find(zip);
+            //db.Customers.;
+        }
+        
+        public void ConfirmPickUp(bool confirmPickUp)
+        {
+            var pickUpConfirmed = db.Customers.Find(confirmPickUp);
+            if (confirmPickUp == true)
+            {
+                
+            }
         }
     }
 }

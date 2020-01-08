@@ -1,4 +1,11 @@
 ﻿@model GarbCollector.Models.Customer
+<!-- jQuery UI CSS Reference -->
+@*<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" />*@
+<!-- Required jQuery and jQuery UI Javascript references -->
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery-ui-1.10.4.min.js")"></script>
+
+
 
 @{
     ViewBag.Title = "Create";
@@ -7,10 +14,10 @@
 <h2>Create</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Customer</h4>
         <hr />
@@ -50,7 +57,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.extraPickUpDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.extraPickUpDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.extraPickUpDate, new { htmlAttributes = new { @class = "date-picker" } })
                 @Html.ValidationMessageFor(model => model.extraPickUpDate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -114,8 +121,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.pickupConfirmation, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.pickupConfirmation, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.pickupConfirmation, "", new { @class = "text-danger" })
+                @Html.CheckBoxFor(model => model.pickupConfirmation, new { htmlAttributes = new { @class = "form-control" } })
+                @*Html.ValidationMessageFor(model => model.pickupConfirmation, "", new { @class = "text-danger" }) *@
             </div>
         </div>
 

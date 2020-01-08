@@ -71,6 +71,7 @@ namespace GarbCollector.Controllers
             return View();
         }
 
+
         // POST: /Account/Register    
         [HttpPost]
         [AllowAnonymous]
@@ -81,12 +82,22 @@ namespace GarbCollector.Controllers
             {
                 var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
+
+
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                        await this.UserManager.AddToRoleAsync(user.Id, model.UserRoles);
-                    //Ends Here     
-                    return RedirectToAction("Index", "Users");
+                    await this.UserManager.AddToRoleAsync(user.Id, model.UserRoles);
+
+                    switch (model.UserRoles)
+                    {                       
+                        case "Employee":
+                            return RedirectToAction("Create", "Employees");
+
+                        case "Customer":
+                            return RedirectToAction("Create", "Customers");
+                    }
+                    return RedirectToAction("Index", "User");
                 }
                 ViewBag.Name = new SelectList(context.Roles.Where(u => !u.Name.Contains("Admin"))
                                           .ToList(), "Name", "Name");
@@ -115,7 +126,18 @@ namespace GarbCollector.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    var user = context.Users.Where(u => u.UserName == model.UserName).Select(u => u).SingleOrDefault().Roles.SingleOrDefault();
+                    var role = context.Roles.Where(r => r.Id == user.RoleId).Select(r => r.Name).FirstOrDefault();
+                    switch (role)
+                    {
+                        case "Employee":
+                            return RedirectToAction("Index", "Employees");
+                        case "Customer":
+                            return RedirectToAction("Index", "Customers");
+
+                    }
                     return RedirectToLocal(returnUrl);
+           
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
