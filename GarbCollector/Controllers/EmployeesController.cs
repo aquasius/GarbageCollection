@@ -22,6 +22,10 @@ namespace GarbCollector.Controllers
             return View(employees.ToList());
         }
 
+        public ActionResult Customers()
+        {
+            return RedirectToAction("Index", "Customers");
+        }
         // GET: Employees/Details/5
         public ActionResult Details(int? id)
         {

@@ -18,8 +18,12 @@ namespace GarbCollector.Controllers
         // GET: Customers
         public ActionResult Index()
         {
-            //var customers = db.Customers.Include(c => c.ApplicationUser);
-            //return View(customers.ToList());
+            var customers = db.Customers.Include(c => c.ApplicationUser);
+            return View(customers.ToList());
+        }
+
+        public ActionResult Balance()
+        {
             var Id = User.Identity.GetUserId();
             var person = db.Customers.Where(c => c.ApplicationId == Id).Select(c => c).SingleOrDefault();
             return View("Balance", person);
