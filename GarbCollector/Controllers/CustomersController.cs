@@ -29,6 +29,8 @@ namespace GarbCollector.Controllers
             return View("Balance", person);
         }
 
+        
+
         // GET: Customers/Details/5
         public ActionResult Details(int? id)
         {
@@ -56,11 +58,11 @@ namespace GarbCollector.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,ApplicationId,pickUpDay,firstName,lastName,extraPickUpDate,streetAddress,city,state,zip,balance,suspendedStart,suspendedEnd,pickupConfirmation")] Customer customer)
+        public ActionResult Create([Bind(Include = "Id,ApplicationId,PickUpDay,FirstName,LastName,ExtraPickUpDate,StreetAddress,City,State,Zip,balance,SuspendedStart,SuspendedEnd,PickupConfirmation")] Customer customer)
         {
             if (ModelState.IsValid)
             {
-                customer.balance = 25;
+                customer.balance = 25.00;
                 customer.ApplicationId = User.Identity.GetUserId();
                 db.Customers.Add(customer);
                 db.SaveChanges();
@@ -92,7 +94,7 @@ namespace GarbCollector.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,ApplicationId,pickUpDay,firstName,lastName,extraPickUpDate,streetAddress,city,state,zip,balance,suspendedStart,suspendedEnd,pickupConfirmation")] Customer customer)
+        public ActionResult Edit([Bind(Include = "Id,ApplicationId,PickUpDay,FirstName,LastName,ExtraPickUpDate,StreetAddress,City,State,Zip,balance,suspendedStart,SuspendedEnd,PickupConfirmation")] Customer customer)
         {
             if (ModelState.IsValid)
             {

@@ -28,17 +28,25 @@ namespace GarbCollector.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
+                if (isEmployeeUser())
+                {
+                    return RedirectToAction("Index", "Employees");
+                }
+
+                if (isCustomerUser())
+                {
+                    return RedirectToAction("Index", "Balance");
+                }
             }
             else
             {
                 return RedirectToAction("Index", "Home");
             }
-
             var Roles = context.Roles.ToList();
             return View(Roles);
 
-            
         }
+           
 
         
         public Boolean isAdminUser()
@@ -49,6 +57,46 @@ namespace GarbCollector.Controllers
                 var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
                 var s = UserManager.GetRoles(user.GetUserId());
                 if (s[0].ToString() == "Admin")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        public bool isEmployeeUser()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = User.Identity;
+                ApplicationDbContext context = new ApplicationDbContext();
+                var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+                var s = UserManager.GetRoles(user.GetUserId());
+                if (s[0].ToString() == "Employee")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        public bool isCustomerUser()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = User.Identity;
+                ApplicationDbContext context = new ApplicationDbContext();
+                var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+                var s = UserManager.GetRoles(user.GetUserId());
+                if (s[0].ToString() == "Customer")
                 {
                     return true;
                 }
