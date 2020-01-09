@@ -18,12 +18,62 @@ namespace GarbCollector.Controllers
         // GET: Employees
         public ActionResult Index()
         {
-            //var employees = db.Employees.Include(e => e.ApplicationUser);
-            //return View(employees.ToList());
-            var currentUserId = User.Identity.GetUserId();
-            var day = DateTime.Today.DayOfWeek;
-            string stringDay = day.ToString();
-            var employees = db.Employees.Include(e => e.ApplicationUser);
+            string userId = User.Identity.GetUserId();
+            Employee employee = db.Employees.Where(e => e.ApplicationId == userId).SingleOrDefault();
+            EmployeeHomeViewModel viewModel = new EmployeeHomeViewModel();
+            viewModel.Customers = db.Customers.Include(e => e.ApplicationUser).Where(c => c.Zip == employee.zipCode).ToList();
+            viewModel.DaysOfWeek = new SelectList(new List<string>() { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"});
+            return View(viewModel);
+
+        }
+        [HttpPost]
+
+        public ActionResult Index(EmployeeHomeViewModel employeeView)
+        {
+            string userId = User.Identity.GetUserId();
+            Employee employee = db.Employees.Where(e => e.ApplicationId == userId).SingleOrDefault();
+            EmployeeHomeViewModel viewModel = new EmployeeHomeViewModel();
+            viewModel.Customers = db.Customers.Include(e => e.ApplicationUser).Where(c => c.Zip == employee.zipCode && c.PickUpDay == employeeView.SelectedDay).ToList();
+            viewModel.DaysOfWeek = new SelectList(new List<string>() { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" });
+            return View(viewModel);
+
+        }
+
+        public ActionResult GetPickUpDay(string DayOfWeek)
+        {
+            #region ViewBag
+            List<SelectListItem> dayOfWeek = new List<SelectListItem>() {
+               new SelectListItem
+               {
+                   Text = "Sunday", Value = "Sunday"
+               },
+               new SelectListItem
+               {
+                   Text= "Monday", Value = "Monday"
+               },
+               new SelectListItem
+               {
+                   Text = "Tuesday", Value = "Tuesday"
+               },
+               new SelectListItem
+               {
+                    Text = "Wednesday", Value = "Wednesday"
+               },
+               new SelectListItem
+               {
+                   Text = "Thursday", Value = "Thursday"
+               },
+               new SelectListItem
+               {
+                   Text = "Friday", Value = "Friday"
+               },
+               new SelectListItem
+               {
+                   Text = "Saturday", Value = "Saturday"
+               },
+            };
+            ViewBag.DayOfWeek = dayOfWeek;
+            #endregion
             return View();
         }
 

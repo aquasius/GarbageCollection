@@ -259,10 +259,15 @@
     <Compile Include="Migrations\202001081854217_update2.Designer.cs">
       <DependentUpon>202001081854217_update2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001092145439_DayOfWeekList.cs" />
+    <Compile Include="Migrations\202001092145439_DayOfWeekList.Designer.cs">
+      <DependentUpon>202001092145439_DayOfWeekList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Employee.cs" />
+    <Compile Include="Models\EmployeeHomeViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -417,6 +422,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001081854217_update2.resx">
       <DependentUpon>202001081854217_update2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001092145439_DayOfWeekList.resx">
+      <DependentUpon>202001092145439_DayOfWeekList.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

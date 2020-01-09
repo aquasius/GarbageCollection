@@ -31,7 +31,7 @@ namespace GarbCollector.Models
       public string City { get; set; }
 
       public string State { get; set; }
-      public string Zip { get; set; } 
+      public int Zip { get; set; } 
         [Display(Name = "Balance Due:")]
       public double balance { get; set; }
       [Display(Name = "Suspended Start Ex: MM/DD/YYYY")]

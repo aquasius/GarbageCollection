@@ -17,5 +17,6 @@ namespace GarbCollector.Models
         public string firstName { get; set; }
         public string lastName { get; set; }
         public int zipCode { get; set; }
+        
     }
 }
