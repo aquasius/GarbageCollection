@@ -11,5 +11,7 @@ namespace GarbCollector.Models
         public List<Customer> Customers { get; set; }
         public SelectList DaysOfWeek { get; set; }
         public string SelectedDay { get; set; }
+
+        public bool PickUpConfirmed { get; set; }
     }
 }

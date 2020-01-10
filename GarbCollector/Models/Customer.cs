@@ -24,7 +24,7 @@ namespace GarbCollector.Models
       [Display(Name = "Last Name")]
       public string LastName { get; set; }
       [Display(Name = "Extra Pick Up Date")]
-      public int ExtraPickUpDate { get; set; }
+      public string ExtraPickUpDate { get; set; }
       [Display(Name = "Street Address")]
       public string StreetAddress { get; set; }
       [Display(Name = "City")]

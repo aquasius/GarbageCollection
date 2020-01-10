@@ -24,7 +24,7 @@ namespace GarbCollector.Controllers
             context = new ApplicationDbContext();
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -36,9 +36,9 @@ namespace GarbCollector.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -90,7 +90,7 @@ namespace GarbCollector.Controllers
                     await this.UserManager.AddToRoleAsync(user.Id, model.UserRoles);
 
                     switch (model.UserRoles)
-                    {                       
+                    {
                         case "Employee":
                             return RedirectToAction("Create", "Employees");
 
@@ -107,8 +107,8 @@ namespace GarbCollector.Controllers
             // If we got this far, something failed, redisplay form    
             return View(model);
         }
-    
-         //
+
+        //
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
@@ -131,13 +131,23 @@ namespace GarbCollector.Controllers
                     switch (role)
                     {
                         case "Employee":
+                            var customers = context.Customers.Select(c => c).ToList();
+                            var today = DateTime.Now.Day.ToString();
+                            var endDay = DateTime.Now.Hour;
+                            foreach (var item in customers)
+                            {
+                                if (item.PickupConfirmation == true && endDay >= 17)
+                                {
+                                    item.PickupConfirmation = false;
+                                }
+                            }
                             return RedirectToAction("Index", "Employees");
                         case "Customer":
                             return RedirectToAction("Index", "Customers");
 
                     }
                     return RedirectToLocal(returnUrl);
-           
+
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -178,7 +188,7 @@ namespace GarbCollector.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -194,7 +204,7 @@ namespace GarbCollector.Controllers
 
         //
         // GET: /Account/Register
-        
+
 
         //
         // GET: /Account/ConfirmEmail

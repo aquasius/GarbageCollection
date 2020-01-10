@@ -20,8 +20,10 @@ namespace GarbCollector.Controllers
         {
             string userId = User.Identity.GetUserId();
             Employee employee = db.Employees.Where(e => e.ApplicationId == userId).SingleOrDefault();
+            var today = Convert.ToString(DateTime.Now.DayOfWeek);
+            var todayDate = Convert.ToString(DateTime.Now.Date);
             EmployeeHomeViewModel viewModel = new EmployeeHomeViewModel();
-            viewModel.Customers = db.Customers.Include(e => e.ApplicationUser).Where(c => c.Zip == employee.zipCode).ToList();
+            viewModel.Customers = db.Customers.Include(e => e.ApplicationUser).Where(c => c.Zip == employee.zipCode && (c.PickUpDay == today || c.ExtraPickUpDate == todayDate)).ToList();
             viewModel.DaysOfWeek = new SelectList(new List<string>() { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"});
             return View(viewModel);
 
@@ -77,10 +79,6 @@ namespace GarbCollector.Controllers
             return View();
         }
 
-        public ActionResult Customers()
-        {
-            return RedirectToAction("Index", "Customers");
-        }
         // GET: Employees/Details/5
         public ActionResult Details(int? id)
         {
@@ -165,11 +163,11 @@ namespace GarbCollector.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,Zip,Address,PickupStartDate,PickupEndDate,DayOfWeek,ApplicationUserId")] Customer customer)
         {
-            if (customer.PickupConfirmation == true)
-            {
-                customer.balance = customer.balance + 25;
-                db.SaveChanges();
-            }
+            //if (customer.PickupConfirmation == true)
+            //{
+            //    customer.balance = customer.balance + 25;
+            //    db.SaveChanges();
+            //}
             if (ModelState.IsValid)
             {
                 var customerInDb = db.Customers.Where(x => x.Id == customer.Id).Single();
@@ -223,19 +221,25 @@ namespace GarbCollector.Controllers
             base.Dispose(disposing);
         }
     
-        public void FindZipCodes(int zip)
-        {
-            var customer = db.Customers.Find(zip);
-            //db.Customers.;
-        }
+       
         
-        public void ConfirmPickUp(bool confirmPickUp)
+        public ActionResult ConfirmPickUp(int? id)
         {
-            var pickUpConfirmed = db.Customers.Find(confirmPickUp);
-            if (confirmPickUp == true)
+            var Id = id;
+            EmployeeHomeViewModel model = new EmployeeHomeViewModel();
+            model.DaysOfWeek = new SelectList(new List<string>() { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" });
+            var customerIdFind = db.Customers.Where(x => x.Id == Id).Single();
+            if (customerIdFind.PickupConfirmation != true)
             {
-                
+                customerIdFind.PickupConfirmation = true;
+                customerIdFind.balance += 25;
+                db.SaveChanges();
+                var customers = db.Customers.Where(c => c.Id == customerIdFind.Id).ToList();
+                model.Customers = customers;
+                return View("Index", model);
             }
+
+            return RedirectToAction("Index");
         }
     }
 }
